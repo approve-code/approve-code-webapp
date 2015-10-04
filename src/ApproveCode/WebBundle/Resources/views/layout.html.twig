@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Approve Code - GitHub Application For Approve/Reject PR via GitHub statuses</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="{{ asset('components/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('components/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('components/bootstrap-social/bootstrap-social.css') }}" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" href="{{ asset('components/github-fork-ribbon-css/gh-fork-ribbon.css') }}">
+    <!--[if lt IE 9]>
+    <link rel="stylesheet" href="{{ asset('components/github-fork-ribbon-css/gh-fork-ribbon.ie.css') }}">
+    <![endif]-->
+    <link href="{{ asset('bundles/web/css/styles.css') }}" rel="stylesheet">
+    <link href="{{ asset('components/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css') }}" rel="stylesheet">
+</head>
+<body>
+<!-- Header -->
+<div id="top-nav" class="navbar navbar-inverse navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-toggle"></span>
+            </button>
+            <a class="navbar-brand" href="/">Approve Code</a>
+        </div>
+        {% if user %}
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+                            <i class="glyphicon glyphicon-user"></i> {{ user.username }} <span class="caret"></span></a>
+                        <ul id="g-account-menu" class="dropdown-menu" role="menu">
+                            <li><a href="/repos">Repositories</a></li>
+                            <li><a href="{{ path('ac_web_logout') }}"><i class="glyphicon glyphicon-lock"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        {% else %}
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <a class="btn btn-block btn-social btn-lg btn-github" href="{{ path('ac_web_login') }}">
+                        <i class="fa fa-github"></i>Sign in with GitHub
+                    </a>
+                </ul>
+            </div>
+        {% endif %}
+    </div><!-- /container -->
+</div>
+<!-- /Header -->
+
+<!-- Main -->
+<div class="container">
+    {% block content %}{% endblock %}
+</div><!--/container-->
+<!-- /Main -->
+
+<!-- BOTTOM RIGHT RIBBON -->
+<div class="github-fork-ribbon-wrapper right-bottom">
+    <div class="github-fork-ribbon">
+        <a href="https://github.com/aivus/approve-code">Fork me on GitHub</a>
+    </div>
+</div>
+<!-- BOTTOM RIGHT RIBBON -->
+
+<!-- script references -->
+<script src="{{ asset('components/jquery/dist/jquery.min.js') }}"></script>
+<script src="{{ asset('components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('components/bootstrap-switch/dist/js/bootstrap-switch.min.js') }}"></script>
+{% block javascripts %}{% endblock %}
+</body>
+</html>

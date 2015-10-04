@@ -1,0 +1,7 @@
+fos_user:
+    db_driver: orm
+    firewall_name: manage
+    user_class: ApproveCode\UserBundle\Entity\User
+    registration:
+        confirmation:
+            enabled: false

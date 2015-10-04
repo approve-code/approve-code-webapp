@@ -1,0 +1,4 @@
+services:
+    ac.user.provider.github_user:
+        class: ApproveCode\UserBundle\Security\Core\User\ACUserProvider
+        parent: hwi_oauth.user.provider.fosub_bridge

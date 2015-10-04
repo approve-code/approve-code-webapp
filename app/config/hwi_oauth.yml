@@ -1,0 +1,22 @@
+hwi_oauth:
+    firewall_name: manage
+    connect: ~
+#        confirmation: false
+#        account_connector: hwi_oauth.user.provider.fosub_bridge
+#        registration_form_handler: hwi_oauth.registration.form.handler.fosub_bridge
+#        registration_form: fos_user.registration.form
+
+    resource_owners:
+        github:
+            type:                github
+            client_id:           ~
+            client_secret:       ~
+            scope:               "user:email,admin:repo_hook,repo"
+
+    fosub:
+        # try 30 times to check if a username is available (foo, foo1, foo2 etc)
+        username_iterations: 30
+
+        # mapping between resource owners (see below) and properties
+        properties:
+            github: githubID
