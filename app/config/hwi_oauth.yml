@@ -9,8 +9,8 @@ hwi_oauth:
     resource_owners:
         github:
             type:                github
-            client_id:           ~
-            client_secret:       ~
+            client_id:           <client_id>
+            client_secret:       <client_secret>
             scope:               "user:email,admin:repo_hook,repo"
 
     fosub:
