@@ -34,3 +34,6 @@ hwi_github_login:
 
 ac_web:
     resource: "@ApproveCodeWebBundle/Resources/config/routing.yml"
+
+ac_repository:
+    resource: "@ApproveCodeRepositoryBundle/Resources/config/routing.yml"

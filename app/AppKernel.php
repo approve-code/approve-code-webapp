@@ -18,8 +18,11 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),
-            new ApproveCode\UserBundle\ApproveCodeUserBundle(),
-            new ApproveCode\WebBundle\ApproveCodeWebBundle()
+            new Erivello\GithubApiBundle\ErivelloGithubApiBundle(),
+            new ApproveCode\Bundle\ApiBundle\ApproveCodeApiBundle(),
+            new ApproveCode\Bundle\UserBundle\ApproveCodeUserBundle(),
+            new ApproveCode\Bundle\WebBundle\ApproveCodeWebBundle(),
+            new ApproveCode\Bundle\RepositoryBundle\ApproveCodeRepositoryBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

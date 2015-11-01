@@ -1,9 +1,0 @@
-ac_web_login:
-    pattern: /login/github
-
-ac_web_logout:
-    pattern: /logout
-
-ac_web_index:
-    path:     /
-    defaults: { _controller: ApproveCodeWebBundle:Index:index }

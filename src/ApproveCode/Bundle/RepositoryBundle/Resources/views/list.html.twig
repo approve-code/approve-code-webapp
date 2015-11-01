@@ -1,0 +1,29 @@
+{% extends '@ApproveCodeWeb/layout.html.twig' %}
+{% block content %}
+    <div class="row">
+        <div class="col col-md-8 col-md-offset-2">
+            <div class="pull-right margin-bottom-10">
+                {#Last updated at {{ user.reposSynced|date('d/m/Y H:i:s') }}#}
+                <a href="{{ path('ac_repository_repository_sync') }}" class="btn btn-default btn-sm btn-success">
+                    <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Sync
+                </a>
+            </div>
+
+            <table class="table table-striped table-hover">
+                {% for repository in repositories %}
+                <tr>
+                    <td>{{ repository.fullName }}</td>
+                    <td class="text-right">
+                        <input value="{{ repository.id }}" type="checkbox" class="repos" {{ repository.enabled ? 'checked="checked"' : '' }}>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/approvecodeweb/js/repo_list.js') }}"></script>
+{% endblock %}

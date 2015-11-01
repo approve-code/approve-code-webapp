@@ -1,0 +1,7 @@
+ac_repository_repository_list:
+    path:     /repository/list
+    defaults: { _controller: ApproveCodeRepositoryBundle:Repository:list }
+
+ac_repository_repository_sync:
+    path:     /repository/sync
+    defaults: { _controller: ApproveCodeRepositoryBundle:Repository:sync }

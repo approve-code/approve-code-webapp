@@ -1,0 +1,7 @@
+services:
+    ac.api.wrapper.github_api_wrapper:
+        class: ApproveCode\Bundle\ApiBundle\Wrapper\GithubApiWrapper
+        arguments:
+            - @security.token_storage
+            - @github_api
+

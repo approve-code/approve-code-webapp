@@ -1,13 +1,13 @@
 {
-    "name": "symfony/framework-standard-edition",
+    "name": "approve-code/approve-code-webapp",
     "license": "MIT",
     "type": "project",
-    "description": "The \"Symfony Standard Edition\" distribution",
+    "description": "Approve code web application",
     "autoload": {
-        "psr-4": { "": "src/", "SymfonyStandard\\": "app/SymfonyStandard/" }
+        "psr-4": { "": "src/" }
     },
     "require": {
-        "php": ">=5.3.9",
+        "php": ">=5.5",
         "symfony/symfony": "2.7.*",
         "doctrine/orm": "~2.2,>=2.2.3,<2.5",
         "doctrine/dbal": "<2.5",
@@ -20,7 +20,8 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "friendsofsymfony/user-bundle": "~1.3",
         "hwi/oauth-bundle": "^0.3.9",
-        "ircmaxell/password-compat": "~1.0.3"
+        "ircmaxell/password-compat": "~1.0.3",
+        "erivello/github-api-bundle": "dev-update"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
@@ -51,15 +52,17 @@
     "config": {
         "bin-dir": "bin"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/approve-code/GithubApiBundle.git"
+        }
+    ],
     "extra": {
         "symfony-app-dir": "app",
         "symfony-web-dir": "web",
-        "symfony-assets-install": "relative",
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
-        },
-        "branch-alias": {
-            "dev-master": "2.7-dev"
         }
     }
 }

@@ -28,4 +28,4 @@ security:
                 target: /
 
     access_control:
-        - { path: ^/repositories, role: ROLE_USER }
+        - { path: ^/repository, role: ROLE_USER }
