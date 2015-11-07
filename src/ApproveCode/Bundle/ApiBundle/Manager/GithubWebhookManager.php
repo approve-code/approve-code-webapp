@@ -1,16 +1,16 @@
 <?php
 
-namespace ApproveCode\Bundle\ApiBundle\Wrapper;
+namespace ApproveCode\Bundle\ApiBundle\Manager;
 
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-
-use HWI\Bundle\OAuthBundle\Security\Core\Authentication\Token\OAuthToken;
 
 use Erivello\GithubApiBundle\Service\GithubService;
 
 use Github\Client;
 
-class GithubApiWrapper
+use HWI\Bundle\OAuthBundle\Security\Core\Authentication\Token\OAuthToken;
+
+class GithubWebhookManager
 {
     /**
      * @var Client
@@ -33,11 +33,20 @@ class GithubApiWrapper
         $this->client->authenticate($token->getAccessToken(), null, Client::AUTH_HTTP_TOKEN);
     }
 
-    /**
-     * @return Client
-     */
-    public function getClient()
+    public function createWebhook($username, $repository)
     {
-        return $this->client;
+        $params = [];
+        $result = $this->client->repositories()->hooks()->create($username, $repository, $params);
+    }
+
+    /**
+     * Get repositories data
+     *
+     * @param $username
+     * @return array
+     */
+    public function getUserRepositories($username)
+    {
+        return $this->client->user()->repositories($username);
     }
 }

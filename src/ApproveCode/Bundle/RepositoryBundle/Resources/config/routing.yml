@@ -5,3 +5,7 @@ ac_repository_repository_list:
 ac_repository_repository_sync:
     path:     /repository/sync
     defaults: { _controller: ApproveCodeRepositoryBundle:Repository:sync }
+
+ac_reposiory_repository_toggle:
+    path:     /repository/toggle/{repository}
+    defaults: { _controller: ApproveCodeRepositoryBundle:Repository:toggle }

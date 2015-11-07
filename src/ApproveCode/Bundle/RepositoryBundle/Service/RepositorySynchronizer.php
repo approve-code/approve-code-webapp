@@ -4,18 +4,16 @@ namespace ApproveCode\Bundle\RepositoryBundle\Service;
 
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-use Github\Client;
-
+use ApproveCode\Bundle\ApiBundle\Manager\GithubWebhookManager;
 use ApproveCode\Bundle\RepositoryBundle\Entity\Repository;
-use ApproveCode\Bundle\ApiBundle\Wrapper\GithubApiWrapper;
 use ApproveCode\Bundle\UserBundle\Entity\User;
 
 class RepositorySynchronizer
 {
     /**
-     * @var Client
+     * @var GithubWebhookManager
      */
-    protected $client;
+    protected $githubManager;
 
     /**
      * @var RegistryInterface
@@ -23,12 +21,12 @@ class RepositorySynchronizer
     protected $doctrine;
 
     /**
-     * @param GithubApiWrapper $githubWrapper
+     * @param GithubWebhookManager $githubManager
      * @param RegistryInterface $doctrine
      */
-    public function __construct(GithubApiWrapper $githubWrapper, RegistryInterface $doctrine)
+    public function __construct(GithubWebhookManager $githubManager, RegistryInterface $doctrine)
     {
-        $this->client = $githubWrapper->getClient();
+        $this->githubManager = $githubManager;
         $this->doctrine = $doctrine;
     }
 
@@ -37,7 +35,7 @@ class RepositorySynchronizer
      */
     public function synchronizeUserRepositories(User $user)
     {
-        $repositories = $this->client->user()->repositories($user->getUsername());
+        $repositories = $this->githubManager->getUserRepositories($user->getUsername());
         $this->updateUserRepositories($user, $repositories);
     }
 
@@ -66,7 +64,7 @@ class RepositorySynchronizer
 
         $repositoryManager = $this->doctrine->getManagerForClass(Repository::class);
 
-        //
+        // Create repository entities for new repositories from github
         array_map(
             function ($repository) use ($repositoryGHIds, $user, $repositoryManager) {
                 if (!in_array($repository['id'], $repositoryGHIds)) {

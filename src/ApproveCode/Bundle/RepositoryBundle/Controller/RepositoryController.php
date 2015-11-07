@@ -6,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
+use ApproveCode\Bundle\RepositoryBundle\Entity\Repository;
+
 class RepositoryController extends Controller
 {
     /**
@@ -41,5 +43,14 @@ class RepositoryController extends Controller
         $this->get('ac.repository.service.repository_synchronizer')->synchronizeUserRepositories($this->getUser());
 
         return $this->redirectToRoute('ac_repository_repository_list');
+    }
+
+    /**
+     * @param Repository $repository
+     */
+    public function toggleAction(Repository $repository)
+    {
+        $this->get('ac.api.manager.github_webhook_manager')->createWebhook();
+        $repository->setWebhookId();
     }
 }

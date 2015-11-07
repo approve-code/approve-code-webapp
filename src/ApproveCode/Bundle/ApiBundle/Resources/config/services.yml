@@ -1,7 +1,6 @@
 services:
-    ac.api.wrapper.github_api_wrapper:
-        class: ApproveCode\Bundle\ApiBundle\Wrapper\GithubApiWrapper
+    ac.api.manager.github_webhook_manager:
+        class: ApproveCode\Bundle\ApiBundle\Manager\GithubWebhookManager
         arguments:
             - @security.token_storage
             - @github_api
-
