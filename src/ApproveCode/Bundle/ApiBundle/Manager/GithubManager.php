@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Erivello\GithubApiBundle\Service\GithubService;
 
 use Github\Client;
+use Github\Exception\RuntimeException;
 
 use HWI\Bundle\OAuthBundle\Security\Core\Authentication\Token\OAuthToken;
 
@@ -64,7 +65,12 @@ class GithubManager
             ],
         ];
 
-        $result = $this->client->repositories()->hooks()->create($username, $repository, $params);
+        try {
+            $result = $this->client->repositories()->hooks()->create($username, $repository, $params);
+        } catch (RuntimeException $e) {
+            // Possible not found exception
+            return null;
+        }
 
         return isset($result['id']) ? $result['id'] : null;
     }
@@ -75,12 +81,18 @@ class GithubManager
      * @param string $username
      * @param string $repository
      * @param int $webhookId
-     *
-     * @throws \RuntimeException
+     * @return bool
      */
     public function removeWebhook($username, $repository, $webhookId)
     {
-        $this->client->repositories()->hooks()->remove($username, $repository, $webhookId);
+        try {
+            $this->client->repositories()->hooks()->remove($username, $repository, $webhookId);
+        } catch (RuntimeException $e) {
+            // Possible not found exception
+            return false;
+        }
+
+        return true;
     }
 
     /**

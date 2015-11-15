@@ -33,7 +33,11 @@ class User extends BaseUser
     protected $githubID;
 
     /**
-     * @ORM\OneToMany(targetEntity="ApproveCode\Bundle\RepositoryBundle\Entity\Repository", mappedBy="owner")
+     * @ORM\OneToMany(
+     *  targetEntity="ApproveCode\Bundle\RepositoryBundle\Entity\Repository",
+     *  mappedBy="owner",
+     *  orphanRemoval=true
+     * )
      *
      * @var ArrayCollection|Repository[]
      */

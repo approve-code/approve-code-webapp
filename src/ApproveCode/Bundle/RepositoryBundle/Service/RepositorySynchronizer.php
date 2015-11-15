@@ -41,33 +41,32 @@ class RepositorySynchronizer
 
     /**
      * @param User $user
-     * @param array $repositories
+     * @param array $actualRepositories
      */
-    protected function updateUserRepositories(User $user, array $repositories)
+    protected function updateUserRepositories(User $user, array $actualRepositories)
     {
         // Reindex array by GH repository ids
-        $repositories = array_column($repositories, null, 'id');
+        $actualRepositories = array_column($actualRepositories, null, 'id');
 
-        // Remove obsolete repositories
-        $user->getRepositories()->filter(
-            function (Repository $repository) use ($repositories) {
-                return array_key_exists($repository->getGithubId(), $repositories);
+        $userRepositoryIds = [];
+        /** @var Repository $repository */
+        foreach ($user->getRepositories() as $repository) {
+            // Repository was removed from github
+            if (!array_key_exists($repository->getGithubId(), $actualRepositories)) {
+                $user->getRepositories()->removeElement($repository);
+                continue;
             }
-        );
 
-        // Get current user repository GH ids
-        $repositoryGHIds = $user->getRepositories()->map(
-            function (Repository $repository) {
-                return $repository->getGithubId();
-            }
-        )->toArray();
+            // Collect ids of user repositories
+            $userRepositoryIds[] = $repository->getGithubId();
+        }
 
         $repositoryManager = $this->doctrine->getManagerForClass(Repository::class);
 
         // Create repository entities for new repositories from github
         array_map(
-            function ($repository) use ($repositoryGHIds, $user, $repositoryManager) {
-                if (!in_array($repository['id'], $repositoryGHIds)) {
+            function ($repository) use ($userRepositoryIds, $user, $repositoryManager) {
+                if (!in_array($repository['id'], $userRepositoryIds)) {
                     $repository = (new Repository())
                         ->setGithubId($repository['id'])
                         ->setFullName($repository['full_name'])
@@ -79,7 +78,7 @@ class RepositorySynchronizer
                 }
 
             },
-            $repositories
+            $actualRepositories
         );
 
         $repositoryManager->flush();

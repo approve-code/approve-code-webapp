@@ -2,9 +2,10 @@
 
 namespace ApproveCode\Bundle\ApiBundle\Manager;
 
-use Doctrine\Common\Util\ClassUtils;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+
+use Doctrine\Common\Util\ClassUtils;
 
 use ApproveCode\Bundle\UserBundle\Entity\User;
 use ApproveCode\Bundle\RepositoryBundle\Entity\Repository;
@@ -50,15 +51,11 @@ class WebhookManager
         $user = $this->tokenStorage->getToken()->getUser();
 
         if ($repository->getEnabled()) {
-            try {
-                $this->githubManager->removeWebhook(
-                    $user->getUsername(),
-                    $repository->getName(),
-                    $repository->getWebhookId()
-                );
-            } catch (\RuntimeException $e) {
-                // Not found. Webhook removed manually. I think, it's ok
-            }
+            $this->githubManager->removeWebhook(
+                $user->getUsername(),
+                $repository->getName(),
+                $repository->getWebhookId()
+            );
             $webhookId = null;
         } else {
             $webhookId = $this->githubManager->createWebhook($user->getUsername(), $repository->getName());
