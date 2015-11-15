@@ -4,14 +4,14 @@ namespace ApproveCode\Bundle\RepositoryBundle\Service;
 
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-use ApproveCode\Bundle\ApiBundle\Manager\GithubWebhookManager;
+use ApproveCode\Bundle\ApiBundle\Manager\GithubManager;
 use ApproveCode\Bundle\RepositoryBundle\Entity\Repository;
 use ApproveCode\Bundle\UserBundle\Entity\User;
 
 class RepositorySynchronizer
 {
     /**
-     * @var GithubWebhookManager
+     * @var GithubManager
      */
     protected $githubManager;
 
@@ -21,10 +21,10 @@ class RepositorySynchronizer
     protected $doctrine;
 
     /**
-     * @param GithubWebhookManager $githubManager
+     * @param GithubManager $githubManager
      * @param RegistryInterface $doctrine
      */
-    public function __construct(GithubWebhookManager $githubManager, RegistryInterface $doctrine)
+    public function __construct(GithubManager $githubManager, RegistryInterface $doctrine)
     {
         $this->githubManager = $githubManager;
         $this->doctrine = $doctrine;

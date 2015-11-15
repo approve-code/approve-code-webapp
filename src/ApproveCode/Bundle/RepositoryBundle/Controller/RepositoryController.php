@@ -2,7 +2,9 @@
 
 namespace ApproveCode\Bundle\RepositoryBundle\Controller;
 
+use ApproveCode\Bundle\UserBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -47,10 +49,17 @@ class RepositoryController extends Controller
 
     /**
      * @param Repository $repository
+     * @return JsonResponse
      */
     public function toggleAction(Repository $repository)
     {
-        $this->get('ac.api.manager.github_webhook_manager')->createWebhook();
-        $repository->setWebhookId();
+        if ($repository->getOwner()->getId() !== $this->getUser()->getId()) {
+            $this->createAccessDeniedException();
+        }
+
+        $webhookManager = $this->get('ac.api.manager.webhook_manager');
+        $webhookManager->toggleRepositoryWebhook($repository);
+
+        return new JsonResponse(['success' => true]);
     }
 }

@@ -1,6 +1,14 @@
 services:
-    ac.api.manager.github_webhook_manager:
-        class: ApproveCode\Bundle\ApiBundle\Manager\GithubWebhookManager
+    ac.api.manager.github_manager:
+        class: ApproveCode\Bundle\ApiBundle\Manager\GithubManager
         arguments:
             - @security.token_storage
             - @github_api
+            - %webhook_url%
+
+    ac.api.manager.webhook_manager:
+        class: ApproveCode\Bundle\ApiBundle\Manager\WebhookManager
+        arguments:
+            - @doctrine
+            - @security.token_storage
+            - @ac.api.manager.github_manager

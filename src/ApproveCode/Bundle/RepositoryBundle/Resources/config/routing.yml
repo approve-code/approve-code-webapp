@@ -9,3 +9,5 @@ ac_repository_repository_sync:
 ac_reposiory_repository_toggle:
     path:     /repository/toggle/{repository}
     defaults: { _controller: ApproveCodeRepositoryBundle:Repository:toggle }
+    options:
+        expose: true

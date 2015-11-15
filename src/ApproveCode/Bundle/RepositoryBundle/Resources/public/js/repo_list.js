@@ -5,6 +5,8 @@ $(function () {
     });
 
     function toggleRepoState(event, state) {
-        $.post('/repos/' + this.value + '/process/' + (state ? 'enable' : 'disable'));
+        var repositoryId = this.value;
+        var route = Routing.generate('ac_reposiory_repository_toggle', {'repository': repositoryId});
+        $.post(route);
     }
 });

@@ -2,5 +2,5 @@ services:
     ac.repository.service.repository_synchronizer:
         class: ApproveCode\Bundle\RepositoryBundle\Service\RepositorySynchronizer
         arguments:
-            - @ac.api.manager.github_webhook_manager
+            - @ac.api.manager.github_manager
             - @doctrine

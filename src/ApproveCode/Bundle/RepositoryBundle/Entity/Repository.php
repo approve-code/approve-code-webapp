@@ -196,4 +196,12 @@ class Repository
     {
         return $this->owner;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getFullName();
+    }
 }
