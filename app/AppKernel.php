@@ -19,7 +19,6 @@ class AppKernel extends Kernel
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),
-            new Erivello\GithubApiBundle\ErivelloGithubApiBundle(),
             new ApproveCode\Bundle\ApiBundle\ApproveCodeApiBundle(),
             new ApproveCode\Bundle\UserBundle\ApproveCodeUserBundle(),
             new ApproveCode\Bundle\WebBundle\ApproveCodeWebBundle(),

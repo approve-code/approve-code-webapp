@@ -74,6 +74,3 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
-
-# Github api
-erivello_github_api: ~
