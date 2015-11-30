@@ -4,41 +4,45 @@ namespace ApproveCode\Bundle\ApiBundle\Manager;
 
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-use Erivello\GithubApiBundle\Service\GithubService;
-
-use Github\Client;
+use Github\Api\User;
+use Github\ResultPager;
+use Github\Api\Repository\Hooks;
 use Github\Exception\RuntimeException;
-
-use HWI\Bundle\OAuthBundle\Security\Core\Authentication\Token\OAuthToken;
 
 class GithubManager
 {
     /**
-     * @var Client
+     * @var ResultPager
      */
-    protected $client;
+    private $pager;
 
     /**
      * @var string
      */
-    protected $webhookUrl;
+    private $webhookUrl;
 
     /**
-     * @param TokenStorageInterface $tokenStorage
-     * @param GithubService $github
+     * @var User
+     */
+    private $userApi;
+
+    /**
+     * @var Hooks
+     */
+    private $hooksApi;
+
+    /**
+     * @param User $userApi
+     * @param Hooks $hooksApi
+     * @param ResultPager $pager
      * @param string $webhookUrl
      */
-    public function __construct(TokenStorageInterface $tokenStorage, GithubService $github, $webhookUrl)
+    public function __construct(User $userApi, Hooks $hooksApi, ResultPager $pager, $webhookUrl)
     {
+        $this->userApi = $userApi;
+        $this->hooksApi = $hooksApi;
+        $this->pager = $pager;
         $this->webhookUrl = $webhookUrl;
-        $token = $tokenStorage->getToken();
-
-        if (!$token instanceof OAuthToken) {
-            throw new \RuntimeException(sprintf('Unknown instance of token: %s', get_class($token)));
-        }
-
-        $this->client = $github->getClient();
-        $this->client->authenticate($token->getAccessToken(), null, Client::AUTH_HTTP_TOKEN);
     }
 
     /**
@@ -66,7 +70,7 @@ class GithubManager
         ];
 
         try {
-            $result = $this->client->repositories()->hooks()->create($username, $repository, $params);
+            $result = $this->hooksApi->create($username, $repository, $params);
         } catch (RuntimeException $e) {
             // Possible not found exception
             return null;
@@ -86,7 +90,7 @@ class GithubManager
     public function removeWebhook($username, $repository, $webhookId)
     {
         try {
-            $this->client->repositories()->hooks()->remove($username, $repository, $webhookId);
+            $this->hooksApi->remove($username, $repository, $webhookId);
         } catch (RuntimeException $e) {
             // Possible not found exception
             return false;
@@ -103,6 +107,6 @@ class GithubManager
      */
     public function getUserRepositories($username)
     {
-        return $this->client->user()->repositories($username);
+        return $this->pager->fetchAll($this->userApi, 'repositories', [$username]);
     }
 }

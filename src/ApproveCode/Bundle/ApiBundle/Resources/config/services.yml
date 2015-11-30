@@ -1,9 +1,41 @@
 services:
+
+    ac.api.github.client_factory:
+        class: ApproveCode\Bundle\ApiBundle\Factory\GithubClientFactory
+        arguments:
+            - @security.token_storage
+
+    ac.api.github.client:
+        class: Github\Client
+        factory: ["@ac.api.github.client_factory", createClient]
+
+    ac.api.github.user_api:
+        class: Github\Api\User
+        factory: ["@ac.api.github.client", api]
+        arguments:
+            - user
+
+    ac.api.github.repository_api:
+        class: Github\Api\Repo
+        factory: ["@ac.api.github.client", api]
+        arguments:
+            - repository
+
+    ac.api.github.repository.hooks_api:
+        class: Github\Api\Repository\Hooks
+        factory: ["@ac.api.github.repository_api", hooks]
+
+    ac.api.pager.github:
+        class: Github\ResultPager
+        arguments:
+            - @ac.api.github.client
+
     ac.api.manager.github_manager:
         class: ApproveCode\Bundle\ApiBundle\Manager\GithubManager
         arguments:
-            - @security.token_storage
-            - @github_api
+            - @ac.api.github.user_api
+            - @ac.api.github.repository.hooks_api
+            - @ac.api.pager.github
             - %webhook_url%
 
     ac.api.manager.webhook_manager:
