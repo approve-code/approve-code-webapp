@@ -1,0 +1,21 @@
+parameters:
+    ac.webhook.helper.security.class: ApproveCode\Bundle\WebhookBundle\Helper\SecurityHelper
+    ac.webhook.handler.github_event.class: ApproveCode\Bundle\WebhookBundle\Handler\GithubEventHandler
+    ac.webhook.handler.github.pull_request.class: ApproveCode\Bundle\WebhookBundle\Handler\Github\PullRequestHandler
+services:
+    ac.webhook.helper.security:
+        class: %ac.webhook.helper.security.class%
+        arguments:
+            - %webhook_secret%
+
+    ac.webhook.handler.github_event:
+        class: %ac.webhook.handler.github_event.class%
+        calls:
+            # TODO: Collect handlers by tags in compiler pass
+            - [addEventHandler, [@ac.webhook.handler.github.pull_request]]
+
+    ac.webhook.handler.github.pull_request:
+        class: %ac.webhook.handler.github.pull_request.class%
+        arguments:
+            - @doctrine
+            - @ac.api.github.client_factory

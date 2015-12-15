@@ -22,7 +22,8 @@ class AppKernel extends Kernel
             new ApproveCode\Bundle\ApiBundle\ApproveCodeApiBundle(),
             new ApproveCode\Bundle\UserBundle\ApproveCodeUserBundle(),
             new ApproveCode\Bundle\WebBundle\ApproveCodeWebBundle(),
-            new ApproveCode\Bundle\RepositoryBundle\ApproveCodeRepositoryBundle()
+            new ApproveCode\Bundle\RepositoryBundle\ApproveCodeRepositoryBundle(),
+            new ApproveCode\Bundle\WebhookBundle\ApproveCodeWebhookBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

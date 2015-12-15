@@ -1,8 +1,8 @@
 ac_web_login:
-    pattern: /login/github
+    path: /login/github
 
 ac_web_logout:
-    pattern: /logout
+    path: /logout
 
 ac_web_index:
     path:     /

@@ -1,0 +1,4 @@
+ac_webhook:
+    path:     /webhook/github
+#    methods: [POST]
+    defaults: { _controller: ApproveCodeWebhookBundle:Webhook:github }

@@ -25,6 +25,10 @@ services:
         class: Github\Api\Repository\Hooks
         factory: ["@ac.api.github.repository_api", hooks]
 
+    ac.api.github.repository.statuses_api:
+        class: Github\Api\Repository\Statuses
+        factory: ["@ac.api.github.repository_api", statuses]
+
     ac.api.pager.github:
         class: Github\ResultPager
         arguments:
@@ -37,6 +41,7 @@ services:
             - @ac.api.github.repository.hooks_api
             - @ac.api.pager.github
             - %webhook_url%
+            - %webhook_secret%
 
     ac.api.manager.webhook_manager:
         class: ApproveCode\Bundle\ApiBundle\Manager\WebhookManager

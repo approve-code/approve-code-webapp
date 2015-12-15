@@ -20,7 +20,7 @@ security:
                 resource_owners:
                     github: /login/check-github
                 oauth_user_provider:
-                    service: ac.user.provider.github_user
+                    service: ac.user.provider.user
 
             anonymous: true
             logout:
@@ -28,4 +28,5 @@ security:
                 target: /
 
     access_control:
+        - { path: ^/webhook, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/repository, role: ROLE_USER }

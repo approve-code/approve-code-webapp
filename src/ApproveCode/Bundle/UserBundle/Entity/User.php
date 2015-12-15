@@ -28,9 +28,16 @@ class User extends BaseUser
     /**
      * @var string
      *
-     * @ORM\Column(name="github_id", type="string", nullable=true)
+     * @ORM\Column(name="github_id", type="string", length=255, nullable=true)
      */
     protected $githubID;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="access_token", type="string", length=255)
+     */
+    protected $accessToken;
 
     /**
      * @ORM\OneToMany(
@@ -65,6 +72,29 @@ class User extends BaseUser
         $this->githubID = $githubID;
 
         return $this;
+    }
+
+    /**
+     * Set accessToken
+     *
+     * @param string $accessToken
+     * @return User
+     */
+    public function setAccessToken($accessToken)
+    {
+        $this->accessToken = $accessToken;
+
+        return $this;
+    }
+
+    /**
+     * Get accessToken
+     *
+     * @return string
+     */
+    public function getAccessToken()
+    {
+        return $this->accessToken;
     }
 
     /**

@@ -10,10 +10,13 @@ hwi_oauth_connect:
     prefix:   /login
 
 hwi_github_login:
-    pattern: /login/check-github
+    path: /login/check-github
 
 ac_web:
     resource: "@ApproveCodeWebBundle/Resources/config/routing.yml"
 
 ac_repository:
     resource: "@ApproveCodeRepositoryBundle/Resources/config/routing.yml"
+
+ac_webhook:
+    resource: "@ApproveCodeWebhookBundle/Resources/config/routing.yml"

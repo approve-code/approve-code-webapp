@@ -1,4 +1,17 @@
+parameters:
+    ac.user.provider.user.class: ApproveCode\Bundle\UserBundle\Security\Core\User\UserProvider
+
+    ac.user.event_listener.user_registration.class: ApproveCode\Bundle\UserBundle\EventListener\UserRegistrationEventListener
+
 services:
-    ac.user.provider.github_user:
-        class: ApproveCode\Bundle\UserBundle\Security\Core\User\ACUserProvider
+    ac.user.provider.user:
+        class: ApproveCode\Bundle\UserBundle\Security\Core\User\UserProvider
         parent: hwi_oauth.user.provider.fosub_bridge
+        calls:
+            - [setEventDispatcher, [@event_dispatcher]]
+
+    ac.user.event_listener.user_registration:
+        class: %ac.user.event_listener.user_registration.class%
+        tags:
+            - { name: kernel.event_listener, event: ac_user_registration_event, method: onRegistration }
+            - { name: kernel.event_listener, event: ac_user_login_event, method: onLogin }

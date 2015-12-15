@@ -21,19 +21,21 @@ class GithubClientFactory
     public function __construct(TokenStorageInterface $tokenStorage)
     {
         $this->token = $tokenStorage->getToken();
-
-        if (!$this->token instanceof OAuthToken) {
-            throw new \RuntimeException(sprintf('Unknown instance of token: %s', get_class($this->token)));
-        }
     }
 
     /**
+     * @param string|null $accessToken
      * @return Client
      */
-    public function createClient()
+    public function createClient($accessToken = null)
     {
-        $client = new \Github\Client();
-        $client->authenticate($this->token->getAccessToken(), null, Client::AUTH_HTTP_TOKEN);
+        $client = new Client();
+
+        if ($this->token instanceof OAuthToken && null === $accessToken) {
+            $client->authenticate($this->token->getAccessToken(), null, Client::AUTH_HTTP_TOKEN);
+        } elseif (null !== $accessToken) {
+            $client->authenticate($accessToken, null, Client::AUTH_HTTP_TOKEN);
+        }
 
         return $client;
     }
