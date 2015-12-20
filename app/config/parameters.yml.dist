@@ -24,3 +24,5 @@ parameters:
 
     webhook_url:        http://hooks.approve-code.dev/api/hook
     webhook_secret:     YouMustChangeThisValue
+
+    status_context:     code-review/approve-code

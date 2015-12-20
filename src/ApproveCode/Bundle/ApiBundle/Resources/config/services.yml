@@ -1,5 +1,4 @@
 services:
-
     ac.api.github.client_factory:
         class: ApproveCode\Bundle\ApiBundle\Factory\GithubClientFactory
         arguments:

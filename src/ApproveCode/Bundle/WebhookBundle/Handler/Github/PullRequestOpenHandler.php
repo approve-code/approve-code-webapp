@@ -9,7 +9,7 @@ use ApproveCode\Bundle\RepositoryBundle\Entity\Repository\RepositoryRepository;
 use ApproveCode\Bundle\RepositoryBundle\Exception\RepositoryNotFoundException;
 use ApproveCode\Bundle\WebhookBundle\Handler\GithubEventHandlerInterface;
 
-class PullRequestHandler implements GithubEventHandlerInterface
+class PullRequestOpenHandler implements GithubEventHandlerInterface
 {
     /**
      * @var GithubClientFactory
@@ -17,13 +17,20 @@ class PullRequestHandler implements GithubEventHandlerInterface
     private $clientFactory;
 
     /**
+     * @var string
+     */
+    private $statusContext;
+
+    /**
      * @param RegistryInterface $doctrine
      * @param GithubClientFactory $clientFactory
+     * @param string $statusContext
      */
-    public function __construct(RegistryInterface $doctrine, GithubClientFactory $clientFactory)
+    public function __construct(RegistryInterface $doctrine, GithubClientFactory $clientFactory, $statusContext)
     {
         $this->doctrine = $doctrine;
         $this->clientFactory = $clientFactory;
+        $this->statusContext = $statusContext;
     }
 
     /**
@@ -41,7 +48,7 @@ class PullRequestHandler implements GithubEventHandlerInterface
             throw new RepositoryNotFoundException();
         }
 
-        // TODO: This about this
+        // TODO: Think about this
         $client = $this->clientFactory->createClient($repository->getOwner()->getAccessToken());
         $statusesApi = $client->repository()->statuses();
 
@@ -53,7 +60,7 @@ class PullRequestHandler implements GithubEventHandlerInterface
             [
                 'state'       => 'pending',
                 'description' => 'This PR pending code review',
-                'context'     => 'code-review/approve-code',
+                'context'     => $this->statusContext,
             ]
         );
     }
@@ -71,13 +78,13 @@ class PullRequestHandler implements GithubEventHandlerInterface
      */
     public function isApplicable($payload)
     {
-        return in_array($payload->action, ['opened', 'reopened']);
+        return in_array($payload->action, ['opened', 'reopened', 'synchronize']);
     }
 
     /**
      * @return RepositoryRepository
      */
-    public function getRepositoryRepository()
+    protected function getRepositoryRepository()
     {
         return $this->doctrine
             ->getManagerForClass('ApproveCodeRepositoryBundle:Repository')

@@ -67,7 +67,7 @@ class GithubManager
             'active' => true,
             'events' => [
                 'pull_request',
-                'pull_request_review_comment',
+                'issue_comment',
             ],
             'config' => [
                 'url'          => $this->webhookUrl,
