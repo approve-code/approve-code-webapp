@@ -41,10 +41,9 @@ class PullRequestOpenHandler implements GithubEventHandlerInterface
         $fullName = $payload->pull_request->base->repo->full_name;
         $commitSha = $payload->pull_request->head->sha;
 
-
         $repository = $this->getRepositoryRepository()->findByFullName($fullName);
 
-        if (null === $repository) {
+        if (null === $repository || !$repository->getEnabled()) {
             throw new RepositoryNotFoundException();
         }
 
@@ -78,7 +77,18 @@ class PullRequestOpenHandler implements GithubEventHandlerInterface
      */
     public function isApplicable($payload)
     {
-        return in_array($payload->action, ['opened', 'reopened', 'synchronize']);
+        if (!in_array($payload->action, ['opened', 'reopened', 'synchronize'])) {
+            return false;
+        }
+
+        $fullName = $payload->pull_request->base->repo->full_name;
+        $repository = $this->getRepositoryRepository()->findByFullName($fullName);
+
+        if (null === $repository || !$repository->getEnabled()) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

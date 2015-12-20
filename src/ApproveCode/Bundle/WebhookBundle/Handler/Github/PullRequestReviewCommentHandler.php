@@ -99,7 +99,7 @@ class PullRequestReviewCommentHandler implements GithubEventHandlerInterface
         $fullName = $payload->repository->full_name;
         $repository = $this->getRepositoryRepository()->findByFullName($fullName);
 
-        if (null === $repository) {
+        if (null === $repository || !$repository->getEnabled()) {
             throw new RepositoryNotFoundException();
         }
 
