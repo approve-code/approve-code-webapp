@@ -1,15 +1,16 @@
 <?php
 
-namespace ApproveCode\Bundle\WebhookBundle\Handler\Github;
+namespace ApproveCode\Bundle\WebhookBundle\EventHandler\GithubHandler;
 
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 use Github\Exception\RuntimeException;
 
 use ApproveCode\Bundle\ApiBundle\Factory\GithubClientFactory;
+use ApproveCode\Bundle\WebhookBundle\Helper\StatusMarkerHelper;
 use ApproveCode\Bundle\RepositoryBundle\Entity\Repository\RepositoryRepository;
 use ApproveCode\Bundle\RepositoryBundle\Exception\RepositoryNotFoundException;
-use ApproveCode\Bundle\WebhookBundle\Handler\GithubEventHandlerInterface;
+use ApproveCode\Bundle\WebhookBundle\EventHandler\GithubEventHandlerInterface;
 
 class PullRequestReviewCommentHandler implements GithubEventHandlerInterface
 {
@@ -17,6 +18,11 @@ class PullRequestReviewCommentHandler implements GithubEventHandlerInterface
      * @var GithubClientFactory
      */
     protected $clientFactory;
+
+    /**
+     * @var StatusMarkerHelper
+     */
+    private $statusMarkerHelper;
 
     /**
      * @param RegistryInterface $doctrine
@@ -46,6 +52,7 @@ class PullRequestReviewCommentHandler implements GithubEventHandlerInterface
             throw new RepositoryNotFoundException();
         }
 
+
         // TODO: Think about this
         $client = $this->clientFactory->createClient($repository->getOwner()->getAccessToken());
         $pullRequestsApi = $client->pullRequest();
@@ -54,6 +61,26 @@ class PullRequestReviewCommentHandler implements GithubEventHandlerInterface
         $commits = $pullRequestsApi->commits($ownerName, $repoName, $payload->issue->number);
         $lastCommit = end($commits);
 
+        $statusMarker = $this->statusMarkerHelper->getStatusMarker($payload->comment->body);
+
+        switch ($this->statusMarkerHelper->getMarkerType($statusMarker)) {
+            case StatusMarkerHelper::APPROVE_TYPE:
+                $state = 'success';
+                $description = 'This PR was reviewed';
+                break;
+            case StatusMarkerHelper::UNDER_REVIEW_TYPE:
+                $state = 'pending';
+                $description = 'This PR pending code review';
+                break;
+            case StatusMarkerHelper::REJECT_TYPE:
+                $state = 'failure';
+                $description = 'This PR was rejected';
+                break;
+            default:
+                return;
+        }
+
+
         // TODO: Move it to statuses manager
         $statusesApi = $client->repository()->statuses();
         $statusesApi->create(
@@ -61,8 +88,8 @@ class PullRequestReviewCommentHandler implements GithubEventHandlerInterface
             $repository->getName(),
             $lastCommit['sha'],
             [
-                'state'       => 'success',
-                'description' => 'This PR reviewed',
+                'state'       => $state,
+                'description' => $description,
                 'context'     => $this->statusContext,
             ]
         );
@@ -92,7 +119,7 @@ class PullRequestReviewCommentHandler implements GithubEventHandlerInterface
         }
 
         // Handle only comments with status markers
-        if (null === $this->getStatusMarker($payload->comment->body)) {
+        if (null === $this->statusMarkerHelper->getStatusMarker($payload->comment->body)) {
             return false;
         }
 
@@ -121,25 +148,11 @@ class PullRequestReviewCommentHandler implements GithubEventHandlerInterface
     }
 
     /**
-     * Try to find status marker
-     *
-     * @param string $comment
-     * @return null|string
+     * @param StatusMarkerHelper $statusMarkerHelper
      */
-    protected function getStatusMarker($comment)
+    public function setStatusMarkerHelper(StatusMarkerHelper $statusMarkerHelper)
     {
-        $statusMarker = null;
-
-        // TODO: Add additional approve markers
-        $applicableCommentMarkers = [':+1:', ':-1:'];
-        foreach ($applicableCommentMarkers as $applicableMarker) {
-            if (false !== strpos($comment, $applicableMarker)) {
-                $statusMarker = $applicableMarker;
-                break;
-            }
-        }
-
-        return $statusMarker;
+        $this->statusMarkerHelper = $statusMarkerHelper;
     }
 
     /**

@@ -1,13 +1,13 @@
 <?php
 
-namespace ApproveCode\Bundle\WebhookBundle\Handler\Github;
+namespace ApproveCode\Bundle\WebhookBundle\EventHandler\GithubHandler;
 
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 use ApproveCode\Bundle\ApiBundle\Factory\GithubClientFactory;
 use ApproveCode\Bundle\RepositoryBundle\Entity\Repository\RepositoryRepository;
 use ApproveCode\Bundle\RepositoryBundle\Exception\RepositoryNotFoundException;
-use ApproveCode\Bundle\WebhookBundle\Handler\GithubEventHandlerInterface;
+use ApproveCode\Bundle\WebhookBundle\EventHandler\GithubEventHandlerInterface;
 
 class PullRequestOpenHandler implements GithubEventHandlerInterface
 {

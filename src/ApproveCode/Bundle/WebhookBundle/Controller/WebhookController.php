@@ -40,8 +40,7 @@ class WebhookController extends Controller
             throw $this->createNotFoundException();
         }
 
-        $githubEventHandler = $this->get('ac.webhook.handler.github_event');
-
-        return $githubEventHandler->handle($request);
+        $githubEventManager = $this->get('ac.webhook.event_handler.github_event_manager');
+        return $githubEventManager->handle($request);
     }
 }

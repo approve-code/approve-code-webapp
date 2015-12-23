@@ -1,6 +1,6 @@
 <?php
 
-namespace ApproveCode\Bundle\WebhookBundle\Handler;
+namespace ApproveCode\Bundle\WebhookBundle\EventHandler;
 
 use Symfony\Component\HttpFoundation\Response;
 
@@ -22,6 +22,8 @@ interface GithubEventHandlerInterface
     public function isApplicable($payload);
 
     /**
+     * Handle event
+     *
      * @param object $payload
      * @return mixed|Response
      */

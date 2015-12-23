@@ -1,12 +1,12 @@
 <?php
 
-namespace ApproveCode\Bundle\WebhookBundle\Handler;
+namespace ApproveCode\Bundle\WebhookBundle\EventHandler;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class GithubEventHandler
+class GithubEventManager
 {
     /**
      * List of handlers
