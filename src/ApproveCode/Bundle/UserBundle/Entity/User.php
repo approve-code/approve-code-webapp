@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 use FOS\UserBundle\Entity\User as BaseUser;
 
-use ApproveCode\Bundle\RepositoryBundle\Entity\Repository;
+use ApproveCode\Bundle\UserBundle\Entity\Repository;
 
 /**
  * @ORM\Entity
@@ -41,7 +41,7 @@ class User extends BaseUser
 
     /**
      * @ORM\OneToMany(
-     *  targetEntity="ApproveCode\Bundle\RepositoryBundle\Entity\Repository",
+     *  targetEntity="ApproveCode\Bundle\UserBundle\Entity\Repository",
      *  mappedBy="owner",
      *  orphanRemoval=true
      * )

@@ -1,0 +1,13 @@
+ac_user_repository_list:
+    path:     /repository/list
+    defaults: { _controller: ApproveCodeUserBundle:Repository:list }
+
+ac_user_repository_sync:
+    path:     /repository/sync
+    defaults: { _controller: ApproveCodeUserBundle:Repository:sync }
+
+ac_user_repository_toggle:
+    path:     /repository/toggle/{repository}
+    defaults: { _controller: ApproveCodeUserBundle:Repository:toggle }
+    options:
+        expose: true

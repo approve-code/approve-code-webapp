@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Doctrine\Common\Util\ClassUtils;
 
 use ApproveCode\Bundle\UserBundle\Entity\User;
-use ApproveCode\Bundle\RepositoryBundle\Entity\Repository;
+use ApproveCode\Bundle\UserBundle\Entity\Repository;
 
 class WebhookManager
 {

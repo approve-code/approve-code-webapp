@@ -15,3 +15,9 @@ services:
         tags:
             - { name: kernel.event_listener, event: ac_user_registration_event, method: onRegistration }
             - { name: kernel.event_listener, event: ac_user_login_event, method: onLogin }
+
+    ac.user.repository.service.repository_synchronizer:
+        class: ApproveCode\Bundle\UserBundle\Service\RepositorySynchronizer
+        arguments:
+            - @ac.api.manager.github_manager
+            - @doctrine

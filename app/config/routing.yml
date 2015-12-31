@@ -16,7 +16,8 @@ ac_web:
     resource: "@ApproveCodeWebBundle/Resources/config/routing.yml"
 
 ac_repository:
-    resource: "@ApproveCodeRepositoryBundle/Resources/config/routing.yml"
+    resource: "@ApproveCodeUserBundle/Resources/config/routing.yml"
+    prefix: /user
 
 ac_webhook:
     resource: "@ApproveCodeWebhookBundle/Resources/config/routing.yml"

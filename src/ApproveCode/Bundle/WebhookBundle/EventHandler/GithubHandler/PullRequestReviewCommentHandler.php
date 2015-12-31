@@ -8,8 +8,8 @@ use Github\Exception\RuntimeException;
 
 use ApproveCode\Bundle\ApiBundle\Factory\GithubClientFactory;
 use ApproveCode\Bundle\WebhookBundle\Helper\StatusMarkerHelper;
-use ApproveCode\Bundle\RepositoryBundle\Entity\Repository\RepositoryRepository;
-use ApproveCode\Bundle\RepositoryBundle\Exception\RepositoryNotFoundException;
+use ApproveCode\Bundle\UserBundle\Entity\Repository\RepositoryRepository;
+use ApproveCode\Bundle\UserBundle\Exception\RepositoryNotFoundException;
 use ApproveCode\Bundle\WebhookBundle\EventHandler\GithubEventHandlerInterface;
 
 class PullRequestReviewCommentHandler implements GithubEventHandlerInterface
@@ -161,7 +161,7 @@ class PullRequestReviewCommentHandler implements GithubEventHandlerInterface
     protected function getRepositoryRepository()
     {
         return $this->doctrine
-            ->getManagerForClass('ApproveCodeRepositoryBundle:Repository')
-            ->getRepository('ApproveCodeRepositoryBundle:Repository');
+            ->getManagerForClass('ApproveCodeUserBundle:Repository')
+            ->getRepository('ApproveCodeUserBundle:Repository');
     }
 }

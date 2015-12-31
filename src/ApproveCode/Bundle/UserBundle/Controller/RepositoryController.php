@@ -1,14 +1,13 @@
 <?php
 
-namespace ApproveCode\Bundle\RepositoryBundle\Controller;
+namespace ApproveCode\Bundle\UserBundle\Controller;
 
-use ApproveCode\Bundle\UserBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-use ApproveCode\Bundle\RepositoryBundle\Entity\Repository;
+use ApproveCode\Bundle\UserBundle\Entity\Repository;
 
 class RepositoryController extends Controller
 {
@@ -20,16 +19,16 @@ class RepositoryController extends Controller
         $user = $this->getUser();
 
         $repositories = $this->get('doctrine')
-            ->getManagerForClass('ApproveCodeRepositoryBundle:Repository')
-            ->getRepository('ApproveCodeRepositoryBundle:Repository')
+            ->getManagerForClass('ApproveCodeUserBundle:Repository')
+            ->getRepository('ApproveCodeUserBundle:Repository')
             ->getUserRepositories($user);
 
         if (!$repositories) {
-            $this->get('ac.repository.service.repository_synchronizer')->synchronizeUserRepositories($user);
+            $this->get('ac.user.repository.service.repository_synchronizer')->synchronizeUserRepositories($user);
         }
 
         return $this->render(
-            'ApproveCodeRepositoryBundle::list.html.twig',
+            'ApproveCodeUserBundle::list.html.twig',
             [
                 'repositories' => $repositories,
                 'user'         => $user,
@@ -42,9 +41,9 @@ class RepositoryController extends Controller
      */
     public function syncAction()
     {
-        $this->get('ac.repository.service.repository_synchronizer')->synchronizeUserRepositories($this->getUser());
+        $this->get('ac.user.repository.service.repository_synchronizer')->synchronizeUserRepositories($this->getUser());
 
-        return $this->redirectToRoute('ac_repository_repository_list');
+        return $this->redirectToRoute('ac_user_repository_list');
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace ApproveCode\Bundle\RepositoryBundle\Exception;
+namespace ApproveCode\Bundle\UserBundle\Exception;
 
 class RepositoryNotFoundException extends \RuntimeException
 {

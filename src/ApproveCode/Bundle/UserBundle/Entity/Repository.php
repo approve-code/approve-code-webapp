@@ -1,14 +1,14 @@
 <?php
 
-namespace ApproveCode\Bundle\RepositoryBundle\Entity;
+namespace ApproveCode\Bundle\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 use ApproveCode\Bundle\UserBundle\Entity\User;
 
 /**
- * @ORM\Entity(repositoryClass="ApproveCode\Bundle\RepositoryBundle\Entity\Repository\RepositoryRepository")
- * @ORM\Table(name="ac_repository")
+ * @ORM\Entity(repositoryClass="ApproveCode\Bundle\UserBundle\Entity\Repository\RepositoryRepository")
+ * @ORM\Table(name="ac_user_repository")
  */
 class Repository
 {

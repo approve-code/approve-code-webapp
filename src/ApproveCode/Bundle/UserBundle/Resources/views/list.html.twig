@@ -4,7 +4,7 @@
         <div class="col col-md-8 col-md-offset-2">
             <div class="pull-right margin-bottom-10">
                 {#Last updated at {{ user.reposSynced|date('d/m/Y H:i:s') }}#}
-                <a href="{{ path('ac_repository_repository_sync') }}" class="btn btn-default btn-sm btn-success">
+                <a href="{{ path('ac_user_repository_sync') }}" class="btn btn-default btn-sm btn-success">
                     <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Sync
                 </a>
             </div>
@@ -25,5 +25,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('bundles/approvecoderepository/js/repo_list.js') }}"></script>
+    <script src="{{ asset('bundles/approvecodeuser/js/repo_list.js') }}"></script>
 {% endblock %}

@@ -1,8 +1,8 @@
 <?php
 
-namespace ApproveCode\Bundle\RepositoryBundle\Entity\Repository;
+namespace ApproveCode\Bundle\UserBundle\Entity\Repository;
 
-use ApproveCode\Bundle\RepositoryBundle\Entity\Repository;
+use ApproveCode\Bundle\UserBundle\Entity\Repository;
 use ApproveCode\Bundle\UserBundle\Entity\User;
 
 use Doctrine\ORM\EntityRepository;

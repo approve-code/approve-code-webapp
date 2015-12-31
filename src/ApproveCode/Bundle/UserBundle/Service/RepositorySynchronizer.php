@@ -1,11 +1,11 @@
 <?php
 
-namespace ApproveCode\Bundle\RepositoryBundle\Service;
+namespace ApproveCode\Bundle\UserBundle\Service;
 
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 use ApproveCode\Bundle\ApiBundle\Manager\GithubManager;
-use ApproveCode\Bundle\RepositoryBundle\Entity\Repository;
+use ApproveCode\Bundle\UserBundle\Entity\Repository;
 use ApproveCode\Bundle\UserBundle\Entity\User;
 
 class RepositorySynchronizer
