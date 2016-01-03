@@ -1,43 +1,88 @@
+parameters:
+    ac.github.client_factory.class: ApproveCode\Bundle\GithubBundle\Factory\GithubClientFactory
+
+    ac.github.client.class: Github\Client
+    ac.github.user_api.class: Github\Api\User
+    ac.github.repository_api.class: Github\Api\Repo
+    ac.github.repository.hooks_api.class: Github\Api\Repository\Hooks
+    ac.github.repository.statuses_api.class: Github\Api\Repository\Statuses
+    ac.github.pager.class: Github\ResultPager
+
+    ac.github.manager.github_manager.class: ApproveCode\Bundle\GithubBundle\Manager\GithubManager
+
+    ac.github.event_handler.github_event_manager.class: ApproveCode\Bundle\GithubBundle\EventHandler\GithubEventManager
+    ac.github.handler.github.pull_request_open.class: ApproveCode\Bundle\GithubBundle\EventHandler\GithubHandler\PullRequestOpenHandler
+    ac.github.handler.github.pull_request_comment.class: ApproveCode\Bundle\GithubBundle\EventHandler\GithubHandler\PullRequestReviewCommentHandler
+    ac.github.handler.github.ping.class: ApproveCode\Bundle\GithubBundle\EventHandler\GithubHandler\PingHandler
+
+
 services:
     ac.github.client_factory:
-        class: ApproveCode\Bundle\GithubBundle\Factory\GithubClientFactory
+        class: %ac.github.client_factory.class%
         arguments:
             - @security.token_storage
 
     ac.github.client:
-        class: Github\Client
+        class: %ac.github.client.class%
         factory: ["@ac.github.client_factory", createClient]
 
     ac.github.user_api:
-        class: Github\Api\User
+        class: %ac.github.user_api.class%
         factory: ["@ac.github.client", api]
         arguments:
             - user
 
     ac.github.repository_api:
-        class: Github\Api\Repo
+        class: %ac.github.repository_api.class%
         factory: ["@ac.github.client", api]
         arguments:
             - repository
 
     ac.github.repository.hooks_api:
-        class: Github\Api\Repository\Hooks
+        class: %ac.github.repository.hooks_api.class%
         factory: ["@ac.github.repository_api", hooks]
 
     ac.github.repository.statuses_api:
-        class: Github\Api\Repository\Statuses
+        class: %ac.github.repository.statuses_api.class%
         factory: ["@ac.github.repository_api", statuses]
 
     ac.github.pager:
-        class: Github\ResultPager
+        class: %ac.github.pager.class%
         arguments:
             - @ac.github.client
 
     ac.github.manager.github_manager:
-        class: ApproveCode\Bundle\GithubBundle\Manager\GithubManager
+        class: %ac.github.manager.github_manager.class%
         arguments:
             - @ac.github.user_api
             - @ac.github.repository.hooks_api
             - @ac.github.pager
             - %webhook_url%
             - %webhook_secret%
+
+    ac.github.event_handler.github_event_manager:
+        class: %ac.github.event_handler.github_event_manager.class%
+        calls:
+            # TODO: Collect handlers by tags in compiler pass
+            - [addEventHandler, [@ac.github.handler.github.ping]]
+            - [addEventHandler, [@ac.github.handler.github.pull_request_open]]
+            - [addEventHandler, [@ac.github.handler.github.pull_request_comment]]
+
+    ac.github.handler.github.ping:
+        class: %ac.github.handler.github.ping.class%
+
+    ac.github.handler.github.pull_request_open:
+        class: %ac.github.handler.github.pull_request_open.class%
+        arguments:
+            - @doctrine
+            - @ac.github.client_factory
+            - %status_context%
+
+    ac.github.handler.github.pull_request_comment:
+        class: %ac.github.handler.github.pull_request_comment.class%
+        arguments:
+            - @doctrine
+            - @ac.github.client_factory
+            - %status_context%
+        calls:
+            - [setStatusMarkerHelper, [@ac.webhook.helper.status_marker]]

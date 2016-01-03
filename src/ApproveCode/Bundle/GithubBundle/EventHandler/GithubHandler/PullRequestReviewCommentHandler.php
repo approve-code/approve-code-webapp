@@ -1,16 +1,16 @@
 <?php
 
-namespace ApproveCode\Bundle\WebhookBundle\EventHandler\GithubHandler;
+namespace ApproveCode\Bundle\GithubBundle\EventHandler\GithubHandler;
 
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 use Github\Exception\RuntimeException;
 
 use ApproveCode\Bundle\GithubBundle\Factory\GithubClientFactory;
-use ApproveCode\Bundle\WebhookBundle\Helper\StatusMarkerHelper;
+use ApproveCode\Bundle\GithubBundle\Helper\StatusMarkerHelper;
 use ApproveCode\Bundle\UserBundle\Entity\Repository\RepositoryRepository;
 use ApproveCode\Bundle\UserBundle\Exception\RepositoryNotFoundException;
-use ApproveCode\Bundle\WebhookBundle\EventHandler\GithubEventHandlerInterface;
+use ApproveCode\Bundle\GithubBundle\EventHandler\GithubEventHandlerInterface;
 
 class PullRequestReviewCommentHandler implements GithubEventHandlerInterface
 {

@@ -1,10 +1,7 @@
 parameters:
     ac.webhook.helper.security.class: ApproveCode\Bundle\WebhookBundle\Helper\SecurityHelper
     ac.webhook.helper.status_marker.class: ApproveCode\Bundle\WebhookBundle\Helper\StatusMarkerHelper
-    ac.webhook.event_handler.github_event_manager.class: ApproveCode\Bundle\WebhookBundle\EventHandler\GithubEventManager
-    ac.webhook.handler.github.pull_request_open.class: ApproveCode\Bundle\WebhookBundle\EventHandler\GithubHandler\PullRequestOpenHandler
-    ac.webhook.handler.github.pull_request_comment.class: ApproveCode\Bundle\WebhookBundle\EventHandler\GithubHandler\PullRequestReviewCommentHandler
-    ac.webhook.handler.github.ping.class: ApproveCode\Bundle\WebhookBundle\EventHandler\GithubHandler\PingHandler
+    ac.webhook.manager.webhook_manager.class: ApproveCode\Bundle\WebhookBundle\Manager\WebhookManager
 
 services:
     ac.webhook.helper.security:
@@ -15,35 +12,8 @@ services:
     ac.webhook.helper.status_marker:
         class: %ac.webhook.helper.status_marker.class%
 
-    ac.webhook.event_handler.github_event_manager:
-        class: %ac.webhook.event_handler.github_event_manager.class%
-        calls:
-            # TODO: Collect handlers by tags in compiler pass
-            - [addEventHandler, [@ac.webhook.handler.github.ping]]
-            - [addEventHandler, [@ac.webhook.handler.github.pull_request_open]]
-            - [addEventHandler, [@ac.webhook.handler.github.pull_request_comment]]
-
-    ac.webhook.handler.github.ping:
-        class: %ac.webhook.handler.github.ping.class%
-
-    ac.webhook.handler.github.pull_request_open:
-        class: %ac.webhook.handler.github.pull_request_open.class%
-        arguments:
-            - @doctrine
-            - @ac.github.client_factory
-            - %status_context%
-
-    ac.webhook.handler.github.pull_request_comment:
-        class: %ac.webhook.handler.github.pull_request_comment.class%
-        arguments:
-            - @doctrine
-            - @ac.github.client_factory
-            - %status_context%
-        calls:
-            - [setStatusMarkerHelper, [@ac.webhook.helper.status_marker]]
-
     ac.webhook.manager.webhook_manager:
-        class: ApproveCode\Bundle\WebhookBundle\Manager\WebhookManager
+        class: %ac.webhook.manager.webhook_manager.class%
         arguments:
             - @doctrine
             - @security.token_storage

@@ -1,8 +1,8 @@
 <?php
 
-namespace ApproveCode\Bundle\WebhookBundle\EventHandler\GithubHandler;
+namespace ApproveCode\Bundle\GithubBundle\EventHandler\GithubHandler;
 
-use ApproveCode\Bundle\WebhookBundle\EventHandler\GithubEventHandlerInterface;
+use ApproveCode\Bundle\GithubBundle\EventHandler\GithubEventHandlerInterface;
 
 class PingHandler implements GithubEventHandlerInterface
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace ApproveCode\Bundle\WebhookBundle\EventHandler;
+namespace ApproveCode\Bundle\GithubBundle\EventHandler;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
