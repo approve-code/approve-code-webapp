@@ -1,6 +1,6 @@
 <?php
 
-namespace ApproveCode\Bundle\ApiBundle\Manager;
+namespace ApproveCode\Bundle\WebhookBundle\Manager;
 
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -9,6 +9,8 @@ use Doctrine\Common\Util\ClassUtils;
 
 use ApproveCode\Bundle\UserBundle\Entity\User;
 use ApproveCode\Bundle\UserBundle\Entity\Repository;
+
+use ApproveCode\Bundle\GithubBundle\Manager\GithubManager;
 
 class WebhookManager
 {

@@ -4,7 +4,7 @@ namespace ApproveCode\Bundle\UserBundle\Service;
 
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-use ApproveCode\Bundle\ApiBundle\Manager\GithubManager;
+use ApproveCode\Bundle\GithubBundle\Manager\GithubManager;
 use ApproveCode\Bundle\UserBundle\Entity\Repository;
 use ApproveCode\Bundle\UserBundle\Entity\User;
 

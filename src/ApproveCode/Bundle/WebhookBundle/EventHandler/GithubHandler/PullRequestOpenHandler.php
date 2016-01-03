@@ -4,7 +4,7 @@ namespace ApproveCode\Bundle\WebhookBundle\EventHandler\GithubHandler;
 
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-use ApproveCode\Bundle\ApiBundle\Factory\GithubClientFactory;
+use ApproveCode\Bundle\GithubBundle\Factory\GithubClientFactory;
 use ApproveCode\Bundle\UserBundle\Entity\Repository\RepositoryRepository;
 use ApproveCode\Bundle\UserBundle\Exception\RepositoryNotFoundException;
 use ApproveCode\Bundle\WebhookBundle\EventHandler\GithubEventHandlerInterface;

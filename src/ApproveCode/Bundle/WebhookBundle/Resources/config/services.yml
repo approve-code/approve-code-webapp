@@ -30,14 +30,21 @@ services:
         class: %ac.webhook.handler.github.pull_request_open.class%
         arguments:
             - @doctrine
-            - @ac.api.github.client_factory
+            - @ac.github.client_factory
             - %status_context%
 
     ac.webhook.handler.github.pull_request_comment:
         class: %ac.webhook.handler.github.pull_request_comment.class%
         arguments:
             - @doctrine
-            - @ac.api.github.client_factory
+            - @ac.github.client_factory
             - %status_context%
         calls:
             - [setStatusMarkerHelper, [@ac.webhook.helper.status_marker]]
+
+    ac.webhook.manager.webhook_manager:
+        class: ApproveCode\Bundle\WebhookBundle\Manager\WebhookManager
+        arguments:
+            - @doctrine
+            - @security.token_storage
+            - @ac.github.manager.github_manager

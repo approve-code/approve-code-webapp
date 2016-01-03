@@ -19,10 +19,10 @@ class AppKernel extends Kernel
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),
-            new ApproveCode\Bundle\ApiBundle\ApproveCodeApiBundle(),
             new ApproveCode\Bundle\UserBundle\ApproveCodeUserBundle(),
             new ApproveCode\Bundle\WebBundle\ApproveCodeWebBundle(),
             new ApproveCode\Bundle\WebhookBundle\ApproveCodeWebhookBundle(),
+            new ApproveCode\Bundle\GithubBundle\ApproveCodeGithubBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

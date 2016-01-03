@@ -1,6 +1,6 @@
 <?php
 
-namespace ApproveCode\Bundle\ApiBundle\Factory;
+namespace ApproveCode\Bundle\GithubBundle\Factory;
 
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 

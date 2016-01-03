@@ -1,13 +1,13 @@
 <?php
 
-namespace ApproveCode\Bundle\ApiBundle\DependencyInjection;
+namespace ApproveCode\Bundle\GithubBundle\DependencyInjection;
 
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
-class ApproveCodeApiExtension extends Extension
+class ApproveCodeGithubExtension extends Extension
 {
     /**
      * {@inheritdoc}

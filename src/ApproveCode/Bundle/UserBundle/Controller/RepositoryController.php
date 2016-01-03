@@ -56,7 +56,7 @@ class RepositoryController extends Controller
             $this->createAccessDeniedException();
         }
 
-        $webhookManager = $this->get('ac.api.manager.webhook_manager');
+        $webhookManager = $this->get('ac.webhook.manager.webhook_manager');
         $webhookManager->toggleRepositoryWebhook($repository);
 
         return new JsonResponse(['success' => true]);

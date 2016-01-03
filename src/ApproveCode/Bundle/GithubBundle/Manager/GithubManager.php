@@ -1,8 +1,6 @@
 <?php
 
-namespace ApproveCode\Bundle\ApiBundle\Manager;
-
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+namespace ApproveCode\Bundle\GithubBundle\Manager;
 
 use Github\Api\User;
 use Github\ResultPager;
