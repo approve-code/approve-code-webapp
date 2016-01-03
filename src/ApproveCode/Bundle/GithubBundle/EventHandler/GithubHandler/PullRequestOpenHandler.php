@@ -5,9 +5,10 @@ namespace ApproveCode\Bundle\GithubBundle\EventHandler\GithubHandler;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 use ApproveCode\Bundle\GithubBundle\Factory\GithubClientFactory;
+use ApproveCode\Bundle\GithubBundle\EventHandler\GithubEventHandlerInterface;
+
 use ApproveCode\Bundle\UserBundle\Entity\Repository\RepositoryRepository;
 use ApproveCode\Bundle\UserBundle\Exception\RepositoryNotFoundException;
-use ApproveCode\Bundle\GithubBundle\EventHandler\GithubEventHandlerInterface;
 
 class PullRequestOpenHandler implements GithubEventHandlerInterface
 {
