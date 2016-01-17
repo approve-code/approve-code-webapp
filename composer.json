@@ -23,7 +23,8 @@
         "ircmaxell/password-compat": "~1.0.3",
         "knplabs/github-api": "~1.4",
         "friendsofsymfony/jsrouting-bundle": "^1.5",
-        "indigophp/hash-compat": "^1.1"
+        "indigophp/hash-compat": "^1.1",
+        "doctrine/doctrine-migrations-bundle": "^1.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
