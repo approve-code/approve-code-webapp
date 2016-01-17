@@ -22,7 +22,7 @@ parameters:
     github_client_id:       ~ # Github app client_id should be here
     github_client_secret:   ~ # Github app client_secret should be here
 
-    webhook_url:        http://hooks.approve-code.dev/api/hook
-    webhook_secret:     YouMustChangeThisValue
+    webhook_url:        http://approve-code.dev/webhook/github
+    webhook_secret:     YouHaveToChangeThisValue
 
     status_context:     code-review/approve-code
