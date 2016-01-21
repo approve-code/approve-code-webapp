@@ -71,20 +71,19 @@ services:
 
     ac.github.event_handler.github_event_manager:
         class: %ac.github.event_handler.github_event_manager.class%
-        calls:
-            # TODO: Collect handlers by tags in compiler pass
-            - [addEventHandler, [@ac.github.event_handler.github.ping]]
-            - [addEventHandler, [@ac.github.event_handler.github.pull_request_open]]
-            - [addEventHandler, [@ac.github.event_handler.github.pull_request_comment]]
 
     ac.github.event_handler.github.ping:
         class: %ac.github.event_handler.github.ping.class%
+        tags:
+            - { name: github.event_handler }
 
     ac.github.event_handler.github.pull_request_open:
         class: %ac.github.event_handler.github.pull_request_open.class%
         arguments:
             - @doctrine
             - @ac.github.helper.github_api_helper
+        tags:
+            - { name: github.event_handler }
 
     ac.github.event_handler.github.pull_request_comment:
         class: %ac.github.event_handler.github.pull_request_comment.class%
@@ -92,3 +91,5 @@ services:
             - @doctrine
             - @ac.github.helper.github_api_helper
             - @ac.webhook.helper.status_marker
+        tags:
+            - { name: github.event_handler }
