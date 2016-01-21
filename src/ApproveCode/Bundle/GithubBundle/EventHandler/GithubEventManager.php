@@ -22,6 +22,7 @@ class GithubEventManager
      */
     public function handle(Request $request)
     {
+        /** @var string $event */
         $event = $request->headers->get('X-Github-Event');
 
         if (!array_key_exists($event, $this->eventHandlers)) {
@@ -38,12 +39,10 @@ class GithubEventManager
 
         /** @var GithubEventHandlerInterface $handler */
         foreach ($this->eventHandlers[$event] as $handler) {
-            if (!$handler->isApplicable($json)) {
-                continue;
+            if ($handler->isApplicable($json)) {
+                $handler->handle($json);
+                break;
             }
-
-            $response = $handler->handle($json);
-            break;
         }
 
         if (!$response instanceof Response) {

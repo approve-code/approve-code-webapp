@@ -4,38 +4,36 @@ namespace ApproveCode\Bundle\GithubBundle\EventHandler\GithubHandler;
 
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-use ApproveCode\Bundle\GithubBundle\Factory\GithubClientFactory;
 use ApproveCode\Bundle\GithubBundle\EventHandler\GithubEventHandlerInterface;
-
-use ApproveCode\Bundle\UserBundle\Entity\Repository\RepositoryRepository;
+use ApproveCode\Bundle\GithubBundle\Helper\GithubApiHelper;
 use ApproveCode\Bundle\UserBundle\Exception\RepositoryNotFoundException;
+use ApproveCode\Bundle\UserBundle\Entity\Repository\RepositoryRepository;
 
 class PullRequestOpenHandler implements GithubEventHandlerInterface
 {
     /**
-     * @var GithubClientFactory
+     * @var RegistryInterface
      */
-    private $clientFactory;
+    protected $doctrine;
 
     /**
-     * @var string
+     * @var GithubApiHelper
      */
-    private $statusContext;
+    protected $githubApiHelper;
 
     /**
      * @param RegistryInterface $doctrine
-     * @param GithubClientFactory $clientFactory
-     * @param string $statusContext
+     * @param GithubApiHelper $githubApiHelper
      */
-    public function __construct(RegistryInterface $doctrine, GithubClientFactory $clientFactory, $statusContext)
+    public function __construct(RegistryInterface $doctrine, GithubApiHelper $githubApiHelper)
     {
         $this->doctrine = $doctrine;
-        $this->clientFactory = $clientFactory;
-        $this->statusContext = $statusContext;
+        $this->githubApiHelper = $githubApiHelper;
     }
 
     /**
      * {@inheritdoc}
+     * @throws RepositoryNotFoundException
      */
     public function handle($payload)
     {
@@ -48,21 +46,10 @@ class PullRequestOpenHandler implements GithubEventHandlerInterface
             throw new RepositoryNotFoundException();
         }
 
-        // TODO: Think about this
-        $client = $this->clientFactory->createClient($repository->getOwner()->getAccessToken());
-        $statusesApi = $client->repository()->statuses();
-
-        // TODO: Move it to statuses manager
-        $statusesApi->create(
-            $repository->getOwner()->getUsername(),
-            $repository->getName(),
-            $commitSha,
-            [
-                'state'       => 'pending',
-                'description' => 'This PR pending code review',
-                'context'     => $this->statusContext,
-            ]
-        );
+        $this->githubApiHelper->createStatus($repository, $commitSha, [
+            'state' => 'pending',
+            'description' => 'This PR pending code review'
+        ]);
     }
 
     /**
@@ -78,18 +65,14 @@ class PullRequestOpenHandler implements GithubEventHandlerInterface
      */
     public function isApplicable($payload)
     {
-        if (!in_array($payload->action, ['opened', 'reopened', 'synchronize'])) {
+        if (!in_array($payload->action, ['opened', 'reopened', 'synchronize'], true)) {
             return false;
         }
 
         $fullName = $payload->pull_request->base->repo->full_name;
         $repository = $this->getRepositoryRepository()->findByFullName($fullName);
 
-        if (null === $repository || !$repository->getEnabled()) {
-            return false;
-        }
-
-        return true;
+        return !(null === $repository || !$repository->getEnabled());
     }
 
     /**

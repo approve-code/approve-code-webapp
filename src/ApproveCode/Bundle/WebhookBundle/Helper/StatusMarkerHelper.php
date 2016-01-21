@@ -58,7 +58,7 @@ class StatusMarkerHelper
     }
 
     /**
-     * Return approve merkers
+     * Return approve markers
      *
      * @return string[]
      */

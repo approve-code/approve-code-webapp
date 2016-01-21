@@ -10,10 +10,12 @@ parameters:
 
     ac.github.manager.github_manager.class: ApproveCode\Bundle\GithubBundle\Manager\GithubManager
 
+    ac.github.helper.github_api_helper.class: ApproveCode\Bundle\GithubBundle\Helper\GithubApiHelper
+
     ac.github.event_handler.github_event_manager.class: ApproveCode\Bundle\GithubBundle\EventHandler\GithubEventManager
-    ac.github.handler.github.pull_request_open.class: ApproveCode\Bundle\GithubBundle\EventHandler\GithubHandler\PullRequestOpenHandler
-    ac.github.handler.github.pull_request_comment.class: ApproveCode\Bundle\GithubBundle\EventHandler\GithubHandler\PullRequestReviewCommentHandler
-    ac.github.handler.github.ping.class: ApproveCode\Bundle\GithubBundle\EventHandler\GithubHandler\PingHandler
+    ac.github.event_handler.github.pull_request_open.class: ApproveCode\Bundle\GithubBundle\EventHandler\GithubHandler\PullRequestOpenHandler
+    ac.github.event_handler.github.pull_request_comment.class: ApproveCode\Bundle\GithubBundle\EventHandler\GithubHandler\PullRequestReviewCommentHandler
+    ac.github.event_handler.github.ping.class: ApproveCode\Bundle\GithubBundle\EventHandler\GithubHandler\PingHandler
 
 
 services:
@@ -61,29 +63,32 @@ services:
             - %webhook_secret%
             - %webhook_insecure_ssl%
 
+    ac.github.helper.github_api_helper:
+        class: %ac.github.helper.github_api_helper.class%
+        arguments:
+            - @ac.github.client_factory
+            - %status_context%
+
     ac.github.event_handler.github_event_manager:
         class: %ac.github.event_handler.github_event_manager.class%
         calls:
             # TODO: Collect handlers by tags in compiler pass
-            - [addEventHandler, [@ac.github.handler.github.ping]]
-            - [addEventHandler, [@ac.github.handler.github.pull_request_open]]
-            - [addEventHandler, [@ac.github.handler.github.pull_request_comment]]
+            - [addEventHandler, [@ac.github.event_handler.github.ping]]
+            - [addEventHandler, [@ac.github.event_handler.github.pull_request_open]]
+            - [addEventHandler, [@ac.github.event_handler.github.pull_request_comment]]
 
-    ac.github.handler.github.ping:
-        class: %ac.github.handler.github.ping.class%
+    ac.github.event_handler.github.ping:
+        class: %ac.github.event_handler.github.ping.class%
 
-    ac.github.handler.github.pull_request_open:
-        class: %ac.github.handler.github.pull_request_open.class%
+    ac.github.event_handler.github.pull_request_open:
+        class: %ac.github.event_handler.github.pull_request_open.class%
         arguments:
             - @doctrine
-            - @ac.github.client_factory
-            - %status_context%
+            - @ac.github.helper.github_api_helper
 
-    ac.github.handler.github.pull_request_comment:
-        class: %ac.github.handler.github.pull_request_comment.class%
+    ac.github.event_handler.github.pull_request_comment:
+        class: %ac.github.event_handler.github.pull_request_comment.class%
         arguments:
             - @doctrine
-            - @ac.github.client_factory
-            - %status_context%
-        calls:
-            - [setStatusMarkerHelper, [@ac.webhook.helper.status_marker]]
+            - @ac.github.helper.github_api_helper
+            - @ac.webhook.helper.status_marker

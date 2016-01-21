@@ -4,41 +4,37 @@ namespace ApproveCode\Bundle\GithubBundle\EventHandler\GithubHandler;
 
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
-use Github\Exception\RuntimeException;
-
 use ApproveCode\Bundle\WebhookBundle\Helper\StatusMarkerHelper;
-
-use ApproveCode\Bundle\GithubBundle\Factory\GithubClientFactory;
+use ApproveCode\Bundle\GithubBundle\Helper\GithubApiHelper;
 use ApproveCode\Bundle\GithubBundle\EventHandler\GithubEventHandlerInterface;
-
 use ApproveCode\Bundle\UserBundle\Entity\Repository\RepositoryRepository;
 use ApproveCode\Bundle\UserBundle\Exception\RepositoryNotFoundException;
 
 class PullRequestReviewCommentHandler implements GithubEventHandlerInterface
 {
     /**
-     * @var GithubClientFactory
+     * @var GithubApiHelper
      */
-    protected $clientFactory;
+    protected $githubApiHelper;
 
     /**
      * @var StatusMarkerHelper
      */
-    private $statusMarkerHelper;
+    protected $statusMarkerHelper;
 
     /**
      * @param RegistryInterface $doctrine
-     * @param GithubClientFactory $clientFactory
-     * @param string $statusContext
+     * @param StatusMarkerHelper $statusMarkerHelper
+     * @param GithubApiHelper $githubApiHelper
      */
     public function __construct(
         RegistryInterface $doctrine,
-        GithubClientFactory $clientFactory,
-        $statusContext
+        GithubApiHelper $githubApiHelper,
+        StatusMarkerHelper $statusMarkerHelper
     ) {
         $this->doctrine = $doctrine;
-        $this->clientFactory = $clientFactory;
-        $this->statusContext = $statusContext;
+        $this->githubApiHelper = $githubApiHelper;
+        $this->statusMarkerHelper = $statusMarkerHelper;
     }
 
     /**
@@ -54,47 +50,34 @@ class PullRequestReviewCommentHandler implements GithubEventHandlerInterface
             throw new RepositoryNotFoundException();
         }
 
-
-        // TODO: Think about this
-        $client = $this->clientFactory->createClient($repository->getOwner()->getAccessToken());
-        $pullRequestsApi = $client->pullRequest();
-
         list($ownerName, $repoName) = explode('/', $fullName, 2);
-        $commits = $pullRequestsApi->commits($ownerName, $repoName, $payload->issue->number);
-        $lastCommit = end($commits);
+        $commit = $this->githubApiHelper->getLastCommitInPR(
+            $repository->getOwner()->getAccessToken(),
+            $ownerName,
+            $repoName,
+            $payload->issue->number
+        );
 
+        $context = [];
         $statusMarker = $this->statusMarkerHelper->getStatusMarker($payload->comment->body);
-
         switch ($this->statusMarkerHelper->getMarkerType($statusMarker)) {
             case StatusMarkerHelper::APPROVE_TYPE:
-                $state = 'success';
-                $description = 'This PR was reviewed';
+                $context['state'] = 'success';
+                $context['description'] = 'This PR was reviewed';
                 break;
             case StatusMarkerHelper::UNDER_REVIEW_TYPE:
-                $state = 'pending';
-                $description = 'This PR pending code review';
+                $context['state'] = 'pending';
+                $context['description'] = 'This PR pending code review';
                 break;
             case StatusMarkerHelper::REJECT_TYPE:
-                $state = 'failure';
-                $description = 'This PR was rejected';
+                $context['state'] = 'failure';
+                $context['description'] = 'This PR was rejected';
                 break;
             default:
                 return;
         }
 
-
-        // TODO: Move it to statuses manager
-        $statusesApi = $client->repository()->statuses();
-        $statusesApi->create(
-            $repository->getOwner()->getUsername(),
-            $repository->getName(),
-            $lastCommit['sha'],
-            [
-                'state'       => $state,
-                'description' => $description,
-                'context'     => $this->statusContext,
-            ]
-        );
+        $this->githubApiHelper->createStatus($repository, $commit['sha'], $context);
     }
 
     /**
@@ -107,6 +90,7 @@ class PullRequestReviewCommentHandler implements GithubEventHandlerInterface
 
     /**
      * {@inheritdoc}
+     * @throws RepositoryNotFoundException
      */
     public function isApplicable($payload)
     {
@@ -132,29 +116,14 @@ class PullRequestReviewCommentHandler implements GithubEventHandlerInterface
             throw new RepositoryNotFoundException();
         }
 
-        // TODO: Think about this
-        $client = $this->clientFactory->createClient($repository->getOwner()->getAccessToken());
-        $collaboratorsApi = $client->repository()->collaborators();
-
         list($ownerName, $repoName) = explode('/', $payload->repository->full_name, 2);
-        try {
-            $collaboratorsApi->check($ownerName, $repoName, $payload->comment->user->login);
-        } catch (RuntimeException $e) {
-            // User isn't a collaborator
-            if (404 === $e->getCode()) {
-                return false;
-            }
-        }
 
-        return true;
-    }
-
-    /**
-     * @param StatusMarkerHelper $statusMarkerHelper
-     */
-    public function setStatusMarkerHelper(StatusMarkerHelper $statusMarkerHelper)
-    {
-        $this->statusMarkerHelper = $statusMarkerHelper;
+        return $this->githubApiHelper->checkCollaborator(
+            $repository->getOwner()->getAccessToken(),
+            $ownerName,
+            $repoName,
+            $payload->comment->user->login
+        );
     }
 
     /**
