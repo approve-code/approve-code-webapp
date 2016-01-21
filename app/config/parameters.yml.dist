@@ -24,5 +24,6 @@ parameters:
 
     webhook_url:        http://approve-code.dev/webhook/github
     webhook_secret:     YouHaveToChangeThisValue
+    webhook_insecure_ssl: false
 
     status_context:     code-review/approve-code

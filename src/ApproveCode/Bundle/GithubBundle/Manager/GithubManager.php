@@ -25,6 +25,11 @@ class GithubManager
     private $webhookSecret;
 
     /**
+     * @var bool
+     */
+    private $webhookInsecureSSL;
+
+    /**
      * @var User
      */
     private $userApi;
@@ -40,14 +45,16 @@ class GithubManager
      * @param ResultPager $pager
      * @param string $webhookUrl
      * @param string $webhookSecret
+     * @param bool $webhookInsecureSSL
      */
-    public function __construct(User $userApi, Hooks $hooksApi, ResultPager $pager, $webhookUrl, $webhookSecret)
+    public function __construct(User $userApi, Hooks $hooksApi, ResultPager $pager, $webhookUrl, $webhookSecret, $webhookInsecureSSL)
     {
         $this->userApi = $userApi;
         $this->hooksApi = $hooksApi;
         $this->pager = $pager;
         $this->webhookUrl = $webhookUrl;
         $this->webhookSecret = $webhookSecret;
+        $this->webhookInsecureSSL = $webhookInsecureSSL;
     }
 
     /**
@@ -70,7 +77,7 @@ class GithubManager
             'config' => [
                 'url'          => $this->webhookUrl,
                 'content_type' => 'json',
-                'insecure_ssl' => parse_url($this->webhookUrl, PHP_URL_SCHEME) === 'https' ? 0 : 1,
+                'insecure_ssl' => $this->webhookInsecureSSL,
                 'secret'       => $this->webhookSecret,
             ],
         ];

@@ -59,6 +59,7 @@ services:
             - @ac.github.pager
             - %webhook_url%
             - %webhook_secret%
+            - %webhook_insecure_ssl%
 
     ac.github.event_handler.github_event_manager:
         class: %ac.github.event_handler.github_event_manager.class%
